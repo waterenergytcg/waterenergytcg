@@ -1,0 +1,126 @@
+{
+ "contact_email": "waterenergytcg@gmail.com",
+ "stores": [
+  {
+   "slug": "tcgplayer",
+   "name": "TCGplayer",
+   "icon": "🃏",
+   "color": "#1e90ff",
+   "url": "https://www.tcgplayer.com/",
+   "tagline": "Singles and sealed from the TCG marketplace collectors trust.",
+   "desc": "Our TCGplayer store is the best place to build decks and complete sets, with a deep catalog of Pokémon singles plus Gundam, Yu-Gi-Oh!, One Piece and Dragon Ball Fusion World.",
+   "perks": [
+    "Market-priced singles with condition grading",
+    "Easy deck and set building from your cart",
+    "Buyer protection through TCGplayer",
+    "Sealed product and chase cards"
+   ],
+   "note": "Tip: use TCGplayer's cart optimizer to combine our listings with other sellers."
+  },
+  {
+   "slug": "ebay",
+   "name": "eBay",
+   "icon": "🛒",
+   "color": "#e53238",
+   "url": "https://www.ebay.com/",
+   "tagline": "Graded cards, rare finds and auctions.",
+   "desc": "On eBay we list graded slabs, high-end hits and one-of-a-kind finds, with Buy It Now and auction formats.",
+   "perks": [
+    "Graded and high-value cards",
+    "Auctions and Buy It Now",
+    "eBay Money Back Guarantee",
+    "Combined shipping on multiple wins"
+   ],
+   "note": "Follow our eBay store to get new-listing alerts."
+  },
+  {
+   "slug": "shopify",
+   "name": "Shopify",
+   "icon": "🛍️",
+   "color": "#2e9e5b",
+   "url": "https://www.shopify.com/",
+   "tagline": "Our own online shop: new drops first.",
+   "desc": "Our Shopify store is our home base, with new arrivals, preorders and exclusive bundles first.",
+   "perks": [
+    "First access to new drops and preorders",
+    "Exclusive bundles and promos",
+    "Secure checkout with multiple payment options",
+    "Direct support from our team"
+   ],
+   "note": "Sign up for store emails to hear about restocks."
+  },
+  {
+   "slug": "tiktok-shop",
+   "name": "TikTok Shop",
+   "icon": "🎵",
+   "color": "#ff2d6f",
+   "url": "https://www.tiktok.com/@waterenergytcg3",
+   "tagline": "Live pack openings and in-the-moment deals.",
+   "desc": "Join us on TikTok Shop for live openings, flash deals and a look at the cards before they hit the shelf.",
+   "perks": [
+    "Live shows and pack openings",
+    "Flash sales and limited deals",
+    "Shop directly from videos",
+    "Follow for new-card reveals"
+   ],
+   "note": "Follow us on TikTok so you never miss a live."
+  }
+ ],
+ "games": [
+  {
+   "name": "Pokémon TCG",
+   "primary": true,
+   "blurb": "Our main focus: singles, sealed, illustration rares and special illustration rares."
+  },
+  {
+   "name": "Gundam Card Game",
+   "primary": false,
+   "blurb": "Cards and sealed product for the newest battle card game."
+  },
+  {
+   "name": "Yu-Gi-Oh!",
+   "primary": false,
+   "blurb": "Singles and staples for duelists."
+  },
+  {
+   "name": "One Piece Card Game",
+   "primary": false,
+   "blurb": "Leaders, characters and sealed boosters."
+  },
+  {
+   "name": "Dragon Ball Fusion World",
+   "primary": false,
+   "blurb": "Fusion World singles and starter products."
+  }
+ ],
+ "socials": [
+  {
+   "name": "YouTube",
+   "icon": "▶️",
+   "color": "#ff0000",
+   "url": "https://youtube.com/@waterenergytcg?sub_confirmation=1",
+   "blurb": "Pack openings, pulls and collection videos."
+  },
+  {
+   "name": "TikTok",
+   "icon": "🎵",
+   "color": "#ff2d6f",
+   "url": "https://www.tiktok.com/@waterenergytcg3",
+   "blurb": "Short clips, lives and shop drops."
+  },
+  {
+   "name": "Whatnot",
+   "icon": "🔴",
+   "color": "#facc15",
+   "url": "https://www.whatnot.com/s/Ch6DkTLa",
+   "blurb": "Live breaks and auctions."
+  },
+  {
+   "name": "Instagram",
+   "icon": "📸",
+   "color": "#c13584",
+   "url": "https://www.instagram.com/waterenergytcg",
+   "blurb": "Pulls, new stock and behind the scenes."
+  }
+ ]
+}
