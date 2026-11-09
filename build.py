@@ -15,7 +15,11 @@ def page_url(path):
     return SITE + '/' if not path else SITE + '/' + path
 
 def is_bare_home(url):
-    return urlsplit(url).path in ('', '/')
+    parts = urlsplit(url)
+    # A Shopify store's own domain is the shop, even when the path is empty.
+    if parts.netloc.lower().endswith('.myshopify.com'):
+        return False
+    return parts.path in ('', '/')
 
 def same_as_urls():
     seen = []
@@ -99,9 +103,23 @@ def footer(root):
 
 def ext(s): return f'href="{s["url"]}" target="_blank" rel="noopener noreferrer"'
 
+def store_line(s):
+    name = s.get('store_name')
+    return f'<p>Store: {name}</p>' if name else ''
+
+def shop_label(s):
+    if s.get('store_name'):
+        return f'Shop {s["store_name"]} on {s["name"]} ↗'
+    return 'Shop now ↗'
+
+def visit_label(s):
+    if s.get('store_name'):
+        return f'Shop {s["store_name"]} on {s["name"]} ↗'
+    return f'Visit our {s["name"]} store ↗'
+
 # ---- index
 store_cards = ''.join(f'''<a class="card store" style="--c:{s["color"]}" {ext(s)}>
-<span class="ico">{s["icon"]}</span><h3>{s["name"]}</h3><p>{s["tagline"]}</p><span class="go">Shop now ↗</span></a>''' for s in stores)
+<span class="ico">{s["icon"]}</span><h3>{s["name"]}</h3>{store_line(s)}<p>{s["tagline"]}</p><span class="go">{shop_label(s)}</span></a>''' for s in stores)
 feat = ''.join(f'''<article class="card item"><div class="thumb" style="--c:{i["color"]}"><span>{i["emoji"]}</span></div>
 <div class="body"><span class="tag">{i["game"]}</span><h3>{i["title"]}</h3><p>{i["note"]}</p>
 <a class="link" href="{i["url"]}" target="_blank" rel="noopener noreferrer">View on {i["store"]} ↗</a></div></article>''' for i in inv['items'])
@@ -165,12 +183,13 @@ open('index.html','w').write(index)
 for s in stores:
     others = ''.join(f'<a class="chip" href="{o["slug"]}.html">{o["name"]}</a>' for o in stores if o is not s)
     perks = ''.join(f'<li>{p}</li>' for p in s['perks'])
+    named = '\n' + store_line(s) if s.get('store_name') else ''
     page = head(f'{s["name"]} | Water Energy TCG', s['tagline'], '../', f'stores/{s["slug"]}.html') + nav('../') + f'''
 <main><section class="hero small" style="--c:{s["color"]}"><div class="wrap hero-in">
 <a class="crumb" href="../index.html#stores">← All stores</a>
 <span class="ico big">{s["icon"]}</span><h1>Water Energy TCG on {s["name"]}</h1>
-<p class="lead">{s["desc"]}</p>
-<div class="cta"><a class="btn primary" {ext(s)}>Visit our {s["name"]} store ↗</a></div></div></section>
+<p class="lead">{s["desc"]}</p>{named}
+<div class="cta"><a class="btn primary" {ext(s)}>{visit_label(s)}</a></div></div></section>
 <section class="sec"><div class="wrap two">
 <div><h2>Why shop here</h2><ul class="checks">{perks}</ul></div>
 <div class="card"><h3>Good to know</h3><p>{s["note"]}</p><p>Questions? <a href="../index.html#contact">Contact us</a>.</p></div>
