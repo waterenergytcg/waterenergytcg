@@ -121,6 +121,13 @@
    "color": "#c13584",
    "url": "https://www.instagram.com/waterenergytcg",
    "blurb": "Pulls, new stock and behind the scenes."
+  },
+  {
+   "name": "Linktree",
+   "icon": "🔗",
+   "color": "#43e660",
+   "url": "https://linktr.ee/waterenergytcg",
+   "blurb": "All of our links in one place."
   }
  ]
 }
