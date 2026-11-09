@@ -1,19 +1,83 @@
 import json, html
+from urllib.parse import urlsplit
 cfg = json.load(open('data/config.json'))
 inv = json.load(open('data/inventory.json'))
 stores = cfg['stores']
 games = cfg['games']
 socials = cfg.get('socials', [])
 
-def head(title, desc, root):
+SITE = 'https://waterenergytcg.com'
+OG_IMAGE = SITE + '/assets/og-image.png'
+SLOGAN = 'Collect, Trade, Energize!'
+
+def page_url(path):
+    path = path.strip('/')
+    return SITE + '/' if not path else SITE + '/' + path
+
+def is_bare_home(url):
+    return urlsplit(url).path in ('', '/')
+
+def same_as_urls():
+    seen = []
+    for item in list(stores) + list(socials):
+        url = item['url']
+        if is_bare_home(url) or url in seen:
+            continue
+        seen.append(url)
+    return seen
+
+def json_ld():
+    data = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'Organization',
+                '@id': SITE + '/#organization',
+                'name': 'Water Energy TCG',
+                'alternateName': 'waterenergytcg',
+                'url': SITE + '/',
+                'logo': SITE + '/assets/favicon.svg',
+                'email': cfg['contact_email'],
+                'slogan': SLOGAN,
+                'sameAs': same_as_urls(),
+            },
+            {
+                '@type': 'WebSite',
+                '@id': SITE + '/#website',
+                'name': 'Water Energy TCG',
+                'url': SITE + '/',
+                'publisher': {'@id': SITE + '/#organization'},
+            },
+        ],
+    }
+    payload = json.dumps(data, ensure_ascii=False, indent=2).replace('<', '\\u003c')
+    return f'<script type="application/ld+json">\n{payload}\n</script>'
+
+def head(title, desc, root, path):
+    url = page_url(path)
+    ld = '\n' + json_ld() if path.strip('/') == '' else ''
+    image_alt = f'Water Energy TCG. {SLOGAN}'
     return f'''<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title><meta name="description" content="{desc}">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Water Energy TCG">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
-<meta property="og:url" content="https://waterenergytcg.com/"><meta name="theme-color" content="#0b1f3a">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{OG_IMAGE}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{image_alt}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{OG_IMAGE}">
+<meta name="twitter:image:alt" content="{image_alt}">
+<meta name="theme-color" content="#0b1f3a">
 <link rel="icon" href="{root}assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="{root}assets/style.css">
+<link rel="stylesheet" href="{root}assets/style.css">{ld}
 </head><body>'''
 
 def nav(root):
@@ -45,7 +109,7 @@ social_cards = ''.join(f'''<a class="card store" style="--c:{x["color"]}" {ext(x
 game_cards = ''.join(f'<div class="card game {"primary" if g["primary"] else ""}"><h3>{g["name"]}</h3><p>{g["blurb"]}</p></div>' for g in games)
 
 index = head('Water Energy TCG | Pokémon TCG, Gundam, Yu-Gi-Oh!, One Piece & Dragon Ball Fusion World',
- 'Water Energy TCG is your hub for Pokémon TCG and more. Shop on TCGplayer, eBay, Shopify and TikTok Shop.', '') + nav('') + f'''
+ 'Water Energy TCG is your hub for Pokémon TCG and more. Shop on TCGplayer, eBay, Shopify and TikTok Shop.', '', '') + nav('') + f'''
 <main>
 <section class="hero"><div class="wrap hero-in">
 <p class="eyebrow">Pokémon TCG · Gundam · Yu-Gi-Oh! · One Piece · Dragon Ball Fusion World</p>
@@ -101,7 +165,7 @@ open('index.html','w').write(index)
 for s in stores:
     others = ''.join(f'<a class="chip" href="{o["slug"]}.html">{o["name"]}</a>' for o in stores if o is not s)
     perks = ''.join(f'<li>{p}</li>' for p in s['perks'])
-    page = head(f'{s["name"]} | Water Energy TCG', s['tagline'], '../') + nav('../') + f'''
+    page = head(f'{s["name"]} | Water Energy TCG', s['tagline'], '../', f'stores/{s["slug"]}.html') + nav('../') + f'''
 <main><section class="hero small" style="--c:{s["color"]}"><div class="wrap hero-in">
 <a class="crumb" href="../index.html#stores">← All stores</a>
 <span class="ico big">{s["icon"]}</span><h1>Water Energy TCG on {s["name"]}</h1>
@@ -113,4 +177,12 @@ for s in stores:
 </div></section>
 <section class="sec alt"><div class="wrap"><h2>Other ways to shop</h2><div class="chips">{others}</div></div></section></main>''' + footer('../')
     open(f'stores/{s["slug"]}.html','w').write(page)
+
+pages = [''] + [f'stores/{s["slug"]}.html' for s in stores]
+sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
+ '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+sitemap += [f'  <url><loc>{html.escape(page_url(path))}</loc></url>' for path in pages]
+sitemap.append('</urlset>')
+open('sitemap.xml','w').write('\n'.join(sitemap) + '\n')
+open('robots.txt','w').write('User-agent: *\nAllow: /\n\nSitemap: https://waterenergytcg.com/sitemap.xml\n')
 print('built')
